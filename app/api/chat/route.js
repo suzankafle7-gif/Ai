@@ -11,10 +11,13 @@ export async function POST(request) {
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    // FIXED: Changed model name to gemini-1.5-flash-latest
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    
+    // Use gemini-pro which is universally supported on free tier
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-pro",
+      apiVersion: "v1beta" 
+    });
 
-    // Format history for Gemini (exclude the last message which we send separately)
     const history = messages.slice(0, -1).map(msg => ({
       role: msg.role === 'user' ? 'user' : 'model',
       parts: [{ text: msg.content }]
